@@ -67,6 +67,11 @@
           style="width: 200px;"
       ></v-select>
 
+      <v-btn-toggle v-model="selectedFloor" mandatory>
+        <v-btn v-for="floor in floorOptions" :key="floor">{{ floor }}</v-btn>
+      </v-btn-toggle>
+
+
 
       <v-card v-if="availableRooms.length > 0">
         <v-list>
@@ -100,6 +105,7 @@ export default {
     return {
       selectedBuilding: null,
       selectedFilter: 'Free Time',
+      selectedFloor: null,
       availableRooms: [],
       scheduleData: [],
       buildings: ['Smith', 'Kimball', 'Ricks', 'STC', 'Hinckley', 'McKay', 'Spori', 'Austin', 'Taylor', 'Benson', 'Romney', 'Clarke', 'Hart', 'Snow'],
@@ -126,6 +132,16 @@ export default {
         return this.availableRooms.sort((a, b) => a.room.localeCompare(b.room));
       }
       return this.availableRooms;
+    },
+    floorOptions(){
+      const floors_finder = this.availableRooms.map(room => parseInt(room[0]))
+      const floors_set = new Set(floors_finder)
+      const floors = Array.from(floors_set)
+          .sort((a,b) => a-b)
+          .map(floor => floor.toString())
+      floors.unshift('All')
+      return floors
+
     },
     displayTime() {
       if (this.useRealTime) {
