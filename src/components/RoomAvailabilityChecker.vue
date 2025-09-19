@@ -200,6 +200,7 @@ export default {
     selectedBuilding() {
       console.log('Building selected:', this.selectedBuilding);
       this.findAvailableRooms();
+      document.title = `Rooms in ${this.selectedBuilding}`;
     }
   },
   async mounted() {
@@ -264,11 +265,11 @@ export default {
         let isOccupied = false;
         let nextClassTime = null;
 
-        for (const cls of todaysClasses) {
-          const startMinutes = this.timeToMinutes(cls.start_time);
-          const endMinutes = this.timeToMinutes(cls.end_time);
+        for (const todaysClass of todaysClasses) {
+          const startMinutes = this.timeToMinutes(todaysClass.start_time);
+          const endMinutes = this.timeToMinutes(todaysClass.end_time);
 
-          console.log(`  Class: ${cls.start_time}-${cls.end_time} (${startMinutes}-${endMinutes})`);
+          console.log(`  Class: ${todaysClass.start_time}-${todaysClass.end_time} (${startMinutes}-${endMinutes})`);
 
           // Check if currently occupied
           if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
@@ -280,7 +281,7 @@ export default {
           // Check for next class
           if (startMinutes > currentMinutes) {
             if (!nextClassTime || startMinutes < this.timeToMinutes(nextClassTime)) {
-              nextClassTime = cls.start_time;
+              nextClassTime = todaysClass.start_time;
             }
           }
         }
