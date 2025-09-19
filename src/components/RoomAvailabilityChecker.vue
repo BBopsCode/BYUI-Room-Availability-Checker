@@ -68,7 +68,7 @@
       ></v-select>
 
       <v-btn-toggle v-model="selectedFloor" mandatory>
-        <v-btn v-for="floor in floorOptions" :key="floor">{{ floor }}</v-btn>
+        <v-btn v-for="floor in floorOptions" :value="floor" :key="floor">{{ floor }}</v-btn>
       </v-btn-toggle>
 
 
@@ -105,12 +105,12 @@ export default {
     return {
       selectedBuilding: null,
       selectedFilter: 'Free Time',
-      selectedFloor: null,
+      selectedFloor: 'All',
       availableRooms: [],
       scheduleData: [],
       buildings: ['Smith', 'Kimball', 'Ricks', 'STC', 'Hinckley', 'McKay', 'Spori', 'Austin', 'Taylor', 'Benson', 'Romney', 'Clarke', 'Hart', 'Snow'],
       filterOptions: ['Room Number', 'Free Time'],
-      useRealTime: false, // Default to simulated time for testing
+      useRealTime: true, // Default to simulated time for testing
       selectedTime: '13:37', // Default test time
       selectedDay: 'T', // Default to Tuesday
       dayOptions: [
@@ -126,10 +126,14 @@ export default {
   },
   computed: {
     displayedRooms() {
+      let rooms = this.availableRooms;
+      if (this.selectedFloor !== "All")
+        rooms = rooms.filter(room => room.room.startsWith(this.selectedFloor))
+
       if (this.selectedFilter === 'Free Time') {
-        return this.availableRooms.sort((a, b) => b.freeMinutes - a.freeMinutes);
+        return rooms.sort((a, b) => b.freeMinutes - a.freeMinutes);
       } else if (this.selectedFilter === 'Room Number') {
-        return this.availableRooms.sort((a, b) => a.room.localeCompare(b.room));
+        return rooms.sort((a, b) => a.room.localeCompare(b.room));
       }
       return this.availableRooms;
     },
@@ -145,6 +149,7 @@ export default {
       return floors
 
     },
+
     displayTime() {
       if (this.useRealTime) {
         const now = new Date();
@@ -212,7 +217,6 @@ export default {
         console.error('Error loading data:', error);
       }
     },
-
     findAvailableRooms() {
       console.log('\n=== Finding available rooms ===');
 
@@ -220,6 +224,7 @@ export default {
         this.availableRooms = [];
         return;
       }
+
 
       const currentMinutes = this.currentMinutes;
       const currentDay = this.currentDay;
