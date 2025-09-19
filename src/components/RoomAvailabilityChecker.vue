@@ -134,7 +134,9 @@ export default {
       return this.availableRooms;
     },
     floorOptions(){
-      const floors_finder = this.availableRooms.map(room => parseInt(room[0]))
+      console.log((this.availableRooms))
+      const floors_finder = this.availableRooms.map(room => parseInt(room.room[0]))
+      console.log(floors_finder)
       const floors_set = new Set(floors_finder)
       const floors = Array.from(floors_set)
           .sort((a,b) => a-b)
