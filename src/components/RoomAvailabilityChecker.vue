@@ -67,10 +67,12 @@
           style="width: 200px;"
       ></v-select>
 
+      <div v-if="floorOptions.length > 1">
+      <span>Filter by Floor:</span>
       <v-btn-toggle v-model="selectedFloor" mandatory>
         <v-btn v-for="floor in floorOptions" :value="floor" :key="floor">{{ floor }}</v-btn>
       </v-btn-toggle>
-
+      </div>
 
 
       <v-card v-if="availableRooms.length > 0">
